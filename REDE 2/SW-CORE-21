@@ -1,0 +1,54 @@
+==========================SW-CORE-21===========================================
+enable
+configure terminal
+hostname SW-CORE-21
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS"
+enable secret SenhadaEnable
+line console 0
+password SenhadaConsole
+login 
+exit 
+username pessoagrupo privilege 15 secret pessoa123
+username erikgrupo privilege 15 secret erik123
+username vinigrupo privilege 15 secret vini123
+ip domain-name grupo.local
+crypto key generate rsa general-keys modulus 1024
+service password-encryption
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+ip default-gateway 172.16.2.161
+vlan 10
+name VLAN10
+exit
+vlan 20
+name VLAN20
+exit
+vlan 30
+name VLAN30
+exit
+vlan 100
+name VLAN100
+exit
+interface vlan 100
+ip address 172.16.2.190 255.255.255.224
+no shutdown
+exit
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,20,30,100,99
+exit
+interface g1/1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,20,30,100,99
+exit
+interface g2/1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,20,30,100,99
+exit
+do wr

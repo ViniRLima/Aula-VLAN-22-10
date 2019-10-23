@@ -1,0 +1,49 @@
+==========================RT-11================================================
+enable
+configure terminal
+hostname RT-11
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS"
+enable secret SenhadaEnable
+line console 0
+password SenhadaConsole
+login 
+exit 
+username pessoagrupo privilege 15 secret pessoa123
+username erikgrupo privilege 15 secret erik123
+username vinigrupo privilege 15 secret vini123
+ip domain-name grupo.local
+crypto key generate rsa general-keys modulus 1024
+service password-encryption
+login block-for 240 attempts 7 within 600
+security passwords min-length 8
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+interface g0/0
+description SW-CORE-11
+no shutdown
+exit
+interface g0/0.10
+encapsulation dot1q 10
+ip address 172.16.1.1 255.255.255.128
+description VLAN 10
+exit
+interface g0/0.20
+encapsulation dot1q 20
+ip address 172.16.0.1 255.255.255.0
+description VLAN 20
+exit
+interface g0/0.100
+encapsulation dot1q 100
+ip address 172.16.1.129 255.255.255.240
+description VLAN 100
+exit
+interface serial 0/0/0
+description RT-21
+ip address 200.18.189.2 255.255.255.252
+no shutdown
+exit
+ip route 172.16.2.0 255.255.254.0 200.18.189.1 
+do wr
